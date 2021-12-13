@@ -1,105 +1,10 @@
-#------------------------------- PARAMTERS -------------------------------------
-#--------------------------- Edit for each run ---------------------------------
 
-# Amount of dry DNA indicated in the label of each oligo tube (nmol)
-oligos_nmol = (28.4, 31.3, 25.1, 24.3, 33.2, 40.2, 50.1, 18.0, 43.6, 22.2, 24.6, 19.5, 32.7)
-
-# Desired concentration of resuspended oligos (uM)
-oligos_resusp_concentration = 100
-
-# Desired concentrations in the salt gradient (mM)
-test_gradient = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
-
-# Number of replicates per gradient step
-replicates = 8
-
-# Concentration of salt Stock (mM)
-salt_conc = 40
-
-# Total volume in each well of the final assembled plate (ul)
-total_rxn_vol = 40
-
-# Will a scaffold strand be used?
-scaffold = True
-
-# Concentration of scaffold strand in the stock (nM)
-scaffold_conc = 100
-
-
-#-------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------
-
+#--------------------- PROTOCOL --------------------
 
 from opentrons import protocol_api
 import math
-import sys
+#import sys
 
-
-
-# CALCULATIONS
-
-# Number of oligo tubes to be resuspended
-n_oligos = len(oligos_nmol)
-
-# Volume that the oligos need to be resuspended in to reach the desired concentration
-volume_added_to_oligos = [round(x / oligos_resusp_concentration * 1000) for x in oligos_nmol]
-
-# Volume of oligo mix that needs to be added to each well in the final plate
-mix_vol_single = total_rxn_vol/4
-
-# Total volume of oligo mix that needs to be prepared to cover all wells
-mix_volume = mix_vol_single * len(test_gradient) * replicates
-mix_volume_rounded = math.ceil(mix_volume/100)*100
-
-# Volume of scaffold that needs to be added to final mix (uL)
-scaffold_in_mix = mix_volume_rounded/(scaffold_conc/(40))
-
-# Calculate volumes of salt and buffer to create the gradient
-salt_in = []
-buffer_in = []
-
-for i in test_gradient:
-    mg = ((i * total_rxn_vol) / salt_conc)
-    salt_in.append(mg)
-
-    # Add buffer to make up to total rxn volume (+ oligo mix)
-    buff = (total_rxn_vol - mg - mix_vol_single)
-    buffer_in.append(buff)
-
-
-# PARAMETER CHECK
-
-# Check that the concentration of the salt stock is high enough
-if salt_conc < max(test_gradient):
-    protocol.pause('The concentration of the salt stock provided is too low to cover the gradient.')
-    #print('The concentration of the salt stock provided is too low to cover the gradient.')
-    #sys.exit()
-
-# Check if number of replicates and gradient size is within the limits
-if replicates > 8:
-    protocol.pause('Too many repliactes! We cannot fit more than 8 replicates in a plate.')
-    #print('Too many repliactes! We cannot fit more than 8 replicates in a plate.')
-    #sys.exit()
-
-if len(test_gradient) > 12:
-    protocol.pause('Too many salt conditions! We cannot fit a salt gradient with more than 12 steps in a single plate.')
-    #print('Too many salt conditions! We cannot fit a salt gradient with more than 12 steps in a single plate.')
-    #sys.exit()
-
-# Check oligo mix volumes
-if mix_volume_rounded > 1400:
-    protocol.pause('Total mix volme is too high to be handled.')
-    #print('Total mix volme is too high to be handled.')
-    #sys.exit()
-
-
-if mix_volume_rounded < 200:
-    protocol.pause('Mix volume is too small to be handled.')
-    #print('Mix volume is too small to be handled.')
-    #sys.exit()
-
-
-#--------------------- PROTOCOL --------------------
 
 metadata = {
     'protocolName': 'DNA Nanostructures and Buffer Dilutions',
@@ -109,6 +14,101 @@ metadata = {
 }
 
 def run(protocol: protocol_api.ProtocolContext):
+    
+    #------------------------------- PARAMTERS -------------------------------------
+    #--------------------------- Edit for each run ---------------------------------
+
+    # Amount of dry DNA indicated in the label of each oligo tube (nmol)
+    oligos_nmol = (28.4, 31.3, 25.1, 24.3, 33.2, 40.2, 50.1, 18.0, 43.6, 22.2, 24.6, 19.5, 32.7)
+
+    # Desired concentration of resuspended oligos (uM)
+    oligos_resusp_concentration = 100
+
+    # Desired concentrations in the salt gradient (mM)
+    test_gradient = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
+
+    # Number of replicates per gradient step
+    replicates = 8
+
+    # Concentration of salt Stock (mM)
+    salt_conc = 40
+
+    # Total volume in each well of the final assembled plate (ul)
+    total_rxn_vol = 40
+
+    # Will a scaffold strand be used?
+    scaffold = True
+
+    # Concentration of scaffold strand in the stock (nM)
+    scaffold_conc = 100
+
+
+    #-------------------------------------------------------------------------------
+    #-------------------------------------------------------------------------------
+
+
+    # CALCULATIONS
+
+    # Number of oligo tubes to be resuspended
+    n_oligos = len(oligos_nmol)
+
+    # Volume that the oligos need to be resuspended in to reach the desired concentration
+    volume_added_to_oligos = [round(x / oligos_resusp_concentration * 1000) for x in oligos_nmol]
+
+    # Volume of oligo mix that needs to be added to each well in the final plate
+    mix_vol_single = total_rxn_vol/4
+
+    # Total volume of oligo mix that needs to be prepared to cover all wells
+    mix_volume = mix_vol_single * len(test_gradient) * replicates
+    mix_volume_rounded = math.ceil(mix_volume/100)*100
+
+    # Volume of scaffold that needs to be added to final mix (uL)
+    scaffold_in_mix = mix_volume_rounded/(scaffold_conc/(40))
+
+    # Calculate volumes of salt and buffer to create the gradient
+    salt_in = []
+    buffer_in = []
+
+    for i in test_gradient:
+        mg = ((i * total_rxn_vol) / salt_conc)
+        salt_in.append(mg)
+
+        # Add buffer to make up to total rxn volume (+ oligo mix)
+        buff = (total_rxn_vol - mg - mix_vol_single)
+        buffer_in.append(buff)
+
+
+    # PARAMETER CHECK
+
+    # Check that the concentration of the salt stock is high enough
+    if salt_conc < max(test_gradient):
+        protocol.pause('The concentration of the salt stock provided is too low to cover the gradient.')
+        #print('The concentration of the salt stock provided is too low to cover the gradient.')
+        #sys.exit()
+
+    # Check if number of replicates and gradient size is within the limits
+    if replicates > 8:
+        protocol.pause('Too many repliactes! We cannot fit more than 8 replicates in a plate.')
+        #print('Too many repliactes! We cannot fit more than 8 replicates in a plate.')
+        #sys.exit()
+
+    if len(test_gradient) > 12:
+        protocol.pause('Too many salt conditions! We cannot fit a salt gradient with more than 12 steps in a single plate.')
+        #print('Too many salt conditions! We cannot fit a salt gradient with more than 12 steps in a single plate.')
+        #sys.exit()
+
+    # Check oligo mix volumes
+    if mix_volume_rounded > 1400:
+        protocol.pause('Total mix volme is too high to be handled.')
+        #print('Total mix volme is too high to be handled.')
+        #sys.exit()
+
+
+    if mix_volume_rounded < 200:
+        protocol.pause('Mix volume is too small to be handled.')
+        #print('Mix volume is too small to be handled.')
+        #sys.exit()
+
 
     # Define labware
     tiprack_1 = protocol.load_labware('opentrons_96_tiprack_300ul', 7)

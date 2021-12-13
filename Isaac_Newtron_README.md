@@ -5,12 +5,12 @@ The Isaac Newtron team (Jacopo Gabrielli, Leo Gornovskiy, Luis Enrique García R
 
 ## Contents
 The submission comprises 3 files: 
-- GUI_Isaac_Newtron.py
-- Template_Protocol_Isaac_Newtron.py
-- Combinations_Isaac_Newtron.csv
+- Isaac_Newtron_GUI.py
+- Isaac_Newtron_Template_Protocol.py
+- Isaac_Newtron_Combinations.csv
 
-GUI_Isaac_Newtron.py - The Graphical User Interface through which the users' designs are uploaded in a ".csv" format. The ".py" file can be compiled in any Python compiler or IDE. The app also creates and saves a protocol for the combinatorial assembly of the two parts in ".py" format which can be run in the OpenTron without further modifications. Furthermore, the app will create and save a file in ".csv" format informing the user on the final plate layout with the well name written as "Letter + Number" and the combination written as "part 2 part 4".
+Isaac_Newtron_GUI.py - The Graphical User Interface through which the users' designs are uploaded in a ".csv" format. The ".py" file can be compiled in any Python compiler or IDE. The app also creates and saves a protocol for the combinatorial assembly of the two parts in ".py" format which can be run in the OpenTron without further modifications. Furthermore, the app will create and save a file in ".csv" format informing the user on the final plate layout with the well name written as "Letter + Number" and the combination written as "part 2 part 4".
 
-Template_Protocol_Isaac_Newtron.py - The template which GUI_Isaac_Newtron.py uses to write the customised protocol based on the information from the ".csv" file uploaded. The protocol starts from a number of parts 2 and 4 and performs Golden Gate assembly using an assembly mix, water, and parts 1 and 3 in a thermocycler. Following, it transfers part of the final assembly into a spare plate for storage purposes and it adds cells (which are held in a temperature block at 4°C until then) into the remaining construct to do a heat shock transformation in the thermocycler. 
+Isaac_Newtron_Template_Protocol.py - The template which GUI_Isaac_Newtron.py uses to write the customised protocol based on the information from the ".csv" file uploaded. The protocol starts from a number of parts 2 and 4 and performs Golden Gate assembly using an assembly mix, water, and parts 1 and 3 in a thermocycler. Following, it transfers part of the final assembly into a spare plate for storage purposes and it adds cells (which are held in a temperature block at 4°C until then) into the remaining construct to do a heat shock transformation in the thermocycler. 
 
-Combinations_Isaac_Newtron.csv - An example of a ".csv" file containing a number of promoters and UTRs listed vertically under their respective headers. This can be modified to the user's needs and uploaded on GUI_Isaac_Newtron.py to generate a customised protocol.
+Isaac_Newtron_Combinations.csv - An example of a ".csv" file containing a number of promoters and UTRs listed vertically under their respective headers. This can be modified to the user's needs and uploaded on Isaac_Newtron_GUI.py to generate a customised protocol.
